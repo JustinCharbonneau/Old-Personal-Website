@@ -1,181 +1,142 @@
+html,body
+{
+background: url(img/deck.jpg) no-repeat fixed;
+background-position: top;
+width: 100%;
+height: 100%;
+margin: 0px;
+padding: 0px;
+overflow-x: hidden;
+}
+/* html {
+background: url(img/deck.jpg) no-repeat fixed;
+background-size: cover;
+height:50%;
+} */
 
-/* Table of content */
-
-/*===================================
-1. Intro
-2. layout
-
-==================================== */
-* {
-    box-sizing: border-box;
+.welcome{
+    background: url(../img/beach.png) no-repeat fixed;
 }
 
-/*===========================
-1. header
-=========================== */
-
-header {
-    background-color: #606060;
-    color: #f1f1f1;
-    padding-top: 80px;
-    padding-bottom: 40px;
+.navbar-nav {
+float:none;
+margin:0 auto;
+display: block;
+text-align: center;
 }
-
-/*===========================
-1. container
-=========================== */
-
-.container {
-    width:80%;
-    font-family: "Helvetica";
-    text-align: center;
+.navbar-nav > li {
+display: inline-block;
+float:none;
 }
-
-
-/*===========================
-1. Nav Bar
-=========================== */
-
-.navbar{
-    width:100%;
-    background-color: #606060;
-    text-align:center;
+.pic{
+position:absolute;
+grid-area:text;
+top:20%;
+right:15%;
 }
-
-.navbar .center{
-    margin-left: auto;
-    margin-right: auto;
+.pic img{
+width:200px;
+height:200px;
+border-radius:50%;
 }
-
-.navbar ul{
-    list-style-type: none;
+ul{
+list-style-type: none;
 }
-
-.navbar a{
-    color:#f1f1f1;
-    padding-left:2em;
-    padding-right:2em;
+a{
+color:#545454;
+padding-left:1em;
+padding-right:1em;
+font-size:24px;
 }
+.opacity {-webkit-filter: opacity(50%);filter: opacity(50%);}
 
 .navbar a:hover{
-    color:#69bae0;
-    text-decoration: none;
-}
-
-
-/*===========================
-1. Intro
-=========================== */
-
-.intro {
-    position: relative;
-    background-color: #f1f1f1;
-    width: 100%;
-    height: 75vh;
-    background-size: cover;
-}
-
-.intro .greeting{
-    position:absolute;
-    left:15%;
-    right:10%;
-    top:15%;
-}
-
-.intro .greeting h2{
-    color: #3a4649;
-    margin-bottom: 30px;
-    font-size: 64px;
-    font-weight: 700;
-}
-
-.intro .greeting  h3{
-  color: #3a4649;
-  margin-bottom: 30px;
-  font-size: 26px;
-  font-weight: 500;
-}
-
-.intro .greeting p{
-    padding-right:2rem;
-    margin-top:1rem;
-}
-
-.intro .pic{
-    position:absolute;
-    grid-area:text;
-    top:20%;
-    right:15%;
-}
-
-.intro .pic img{
-    width:200px;
-    height:200px;
-    border-radius:50%;
-}
-
-.intro .name{
-    position:relative;
-    text-align:center;
-    top:10%;
-}
-
-.intro .name h1{
-    color: #FFFFFF;
-    background-color: #3498DB;
-    text-align: center;
-    font-family: "Helvetica";
-}
-
-
-/*===========================
-1. footer
-=========================== */
-
-.footer{
-    position: relative;
-    text-align:center;
-    top:90%;
-}
-
-.footer ul{
-    list-style-type: none;
-}
-
-.footer a{
-    color:#72898e;
-    padding-left:1em;
-    padding-right:1em;
-    font-size:24px;
+color:#f1f1f1;
+text-decoration: none;
 }
 
 .footer a:hover{
-    color:#69bae0;
-    text-decoration: none;
+color:#d30808;
+text-decoration: none;
+}
+  /* Add padding BETWEEN each column */
+.row,
+.row > .column {
+padding: 8px;
+}
+.shadow {-webkit-filter: drop-shadow(8px 8px 10px grey);filter: drop-shadow(8px 8px 10px grey);}
+/* Create three equal columns that floats next to each other */
+.column {
+float: left;
+width: 49%;
+display: none; /* Hide all elements by default */
+}
+/* Clear floats after rows */
+.row:after {
+content: "";
+display: table;
+clear: both;
+}
+/* Content */
+.content {
+background-color: white;
+padding: 10px;
 }
 
-
-
-
-/*===========================
-1. mySection
-=========================== */
-
-.mySection{
-    position: relative;
-    background-color: #e5e5e5;
-    width: 100%;
-    height: 100vh;
-    background-size: cover;
+.img {
+  border-radius: 100%;
+  display: flex;
+  flex: 0 0 270px;
+  height: 270px;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  width: 270px;
 }
 
-.mySection h2{
-    color: #3a4649;
-    margin-bottom: 30px;
-    font-size: 26px;
-    font-weight: 500;
+.img__overlay {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: opacity 0.25s;
+  z-index: 1;
 }
 
-/*===========================
-2. Footer
-=========================== */
+.img__overlay:hover {
+  opacity: 2;
+}
+
+.img__overlay {
+  background-color: rgba(46,204,113,0.4);
+  background: linear-gradient(65deg, rgba(46,204,113,0.4), rgba(243,156,18,0.4));
+  color: #545454;
+  font-size: 24px;
+}
+
+/* buttnonn*/
+
+#myBtn {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed/sticky position */
+    bottom: 20px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 99; /* Make sure it does not overlap */
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    background-color: red; /* Set a background color */
+    color: white; /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    padding: 15px; /* Some padding */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 18px; /* Increase font size */
+}
+
+#myBtn:hover {
+    background-color: #555; /* Add a dark-grey background on hover */
+}
