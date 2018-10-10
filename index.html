@@ -1,124 +1,175 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <!-- Required meta tags -->
+  <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <!-- CSS for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- CSS personal -->
-    <link rel="stylesheet" href="./css/styles.css">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
     <title>Justin Charbonneau</title>
-</head>
 
-<body class="bg">
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="files/Justin_Charbonneau.pdf">résumé</a>
+            </li>
+            <li class="dropdown nav-item"><a class="dropdown-toggle" data-toggle="dropdown" href="#">R Projects<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a class="nav-link" href="post.html">Horse Racing</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a class="nav-link" href="#">Page 1-2</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a class="nav-link" href="#">Page 1-3</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="mailto:jchar217@uottawa.ca">email me!</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('img/firewatch-game-graphics.jpg')">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="site-heading">
+              <h1 style="font-weight:300;">Justin Charbonneau</h1>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 col-md-10 mx-auto">
+            <p style="text-align:right;color:white;" id="liveDate"></p>
+          </div>
+        </div>
+      </div>
+    </header>
     <script>
-    // When the user scrolls down 20px from the top of the document, show the button
-    window.onscroll = function() {scrollFunction()};
-
-    function scrollFunction() {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            document.getElementById("myBtn").style.display = "block";
-        } else {
-            document.getElementById("myBtn").style.display = "none";
-        }
-    }
-
-    // When the user clicks on the button, scroll to the top of the document
-    function topFunction() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
+    var d = new Date();
+    document.getElementById("liveDate").innerHTML = d.toDateString();
     </script>
-
-    <section class="welcome">
-        <header class="jumbotron jumbotron-fluid text-center" style="height:10vh;margin-bottom:0;color:#f1f1f1;background-color:transparent">
-
-                <h1 class="display-4">Justin Charbonneau</h1>
-        </header>
-        <nav class="navbar navbar-expand-sm " style="height:5vh;background-color:transparent;">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav display-4" >
-                    <li class="nav-item"><a class="nav-link" href="#home">home</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="./files/Justin_Charbonneau.pdf">résumé</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" disabled href="#projects">projects</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="mailto:jchar217@uottawa.ca">email</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <section style="height:80vh;background-color:transparent" >
-            <div class="container-fluid">
-                <div class="greeting" style="padding:20% 20% 10% 20%;color:#ffffff">
-                    <p>I am a Graduate Student in Electronic Business Technologies (EBT) at the Univeristy of Ottawa. Previously, I studied Management Information Systems at the Univeristy of Ottawa.</p>
-                    <p>I enjoy machine learning, web programming and all things data science.</p>
-                </div>
-            </div>
-        </section>
-    </section>
-
-
-    <section class="projects" style="height:100vh;background-color:transparent;" id="projects">
-        <div class="container-fluid">
-            <div class="row" style="padding-bottom:3%;padding-top:5%">
-                <div class="col-sm-12"align="center">
-                <h3 class="display-4" style="color: #545454;">What I am currently working on</h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12" align="center" style="padding:10%">
-                    <a class="img" href="#">
-                        <div class="img__overlay">
-                            <b>View Progress!</b>
-                        </div>
-                        <img src="img/firewatch.png">
-                    </a>
-                    <h4 style="width:49%;padding-top:5%;color: #d30808;">Home Credit Default Risk</h4>
-                    <p style="width:49%;color: #545454;">Placed ??? / 5600</p>
-                </div>
-            </div>
+    <!-- Main Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h1 style="text-align:center;color:#0085a1;font-weight:300;">What I have worked on</h1>
         </div>
-    </section>
-
-
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="text-center">
-                        <a class="fa fa-facebook fa-sm white-text fa-2x" href="https://facebook.com"></a>
-                        <a class="fa fa-linkedin fa-sm white-text fa-2x" href="https://linkedin.com/in/charbonneau217"></a>
-                        <a class="fa fa-instagram fa-sm white-text fa-2x" href="https://instagram.com"></a>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                <div class="footer-copyright text-right py-3">© 2018 Copyright: Justin Charbonneau
-
-                <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
-                </div>
-                </div>
-            </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-preview">
+            <a href="post.html">
+              <h2 class="post-title">
+                Horse Racing
+              </h2>
+              <h3 class="post-subtitle">
+                Predicting the winner of a race
+              </h3>
+            </a>
+            <p class="post-meta">Posted by
+              on October 10th, 2018</p>
+          </div>
+          <hr>
+          <div class="post-preview">
+            <a href="post.html">
+              <h2 class="post-title">
+                Home Credit Default Risk
+              </h2>
+            </a>
+            <p class="post-meta">Posted by
+              on September 18, 2018</p>
+          </div>
+          <hr>
+          <!-- Pager -->
+          <div class="clearfix">
+            <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+          </div>
         </div>
+      </div>
+    </div>
 
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <ul class="list-inline text-center">
+              <li class="list-inline-item">
+                <a href="https://linkedin.com/in/charbonneau217">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="#">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="https://github.com/JustinCharbonneau">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+            </ul>
+            <p class="copyright text-muted">Copyright &copy; Justin Charbonneau 2018</p>
+          </div>
+        </div>
+      </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-</body>
+    <!-- Custom scripts for this template -->
+    <script src="js/clean-blog.min.js"></script>
+
+  </body>
 
 </html>
