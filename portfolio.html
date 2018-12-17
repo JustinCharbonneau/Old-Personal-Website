@@ -26,9 +26,11 @@
 
     <!-- Font Awesome Icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-
+    <!-- Script to include HTML pages -->
+    <script src="http://www.w3schools.com/lib/w3data.js"></script>
 
   </head>
+
 
   <body id="page-top">
 
@@ -42,7 +44,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#about">About</a>
+              <a class="nav-link js-scroll-trigger" href="./index.html">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#projects">Projects</a>
@@ -63,38 +65,17 @@
         <div class="row">
           <div class="col-lg-10 mx-auto">
             <h1 style="font-weight:300;">
-              <strong>HI! I'm Justin</strong>
+              <strong>Welcome to my portfolio</strong>
             </h1>
           </div>
         </div>
         <div class="row" style="margin-top:10%">
           <div class="col-lg-8 mx-auto">
-            <a class="btn btn-light btn-xl js-scroll-trigger" href="#about"><!--<i class="fas fa-rocket fa-2x" style="transform: rotate(135deg);"></i>-->About Me!</a>
+            <a class="btn btn-light btn-xl js-scroll-trigger" href="#projects"><!--<i class="fas fa-rocket fa-2x" style="transform: rotate(135deg);"></i>-->About Me!</a>
           </div>
         </div>
       </div>
     </header>
-
-    <section class="bg-primary" id="about">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-2 col-md-1 mx-auto">
-            <img class="img-thumbnail" src="img/profilePic.jpg" alt="Profile Picture" style="margin-top:40px;">
-          </div>
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <h2 class="section-heading text-white">Data Science COOP @ <a href="https://www.arioplatform.com/" class="text-white">Ario<a/></h2>
-            <br>
-            <p class="text-faded mb-4">Current Graduate student in Electronic Business Technologies (EBT) at the Univeristy of Ottawa. Previously, I studied Management Information Systems and Analytics at the Univeristy of Ottawa.</p>
-            <p class="text-faded mb-4">I enjoy machine learning, web programming and all things data science. My current focus is on straightening my stats knowledge and R programming language.</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-8 mx-auto text-center">
-            <a class="btn btn-light btn-xl js-scroll-trigger" href="#projects">My Projects!</a>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <section id="projects" class="bg-dark text-white">
       <div class="container">
@@ -112,11 +93,11 @@
         <div class="row">
           <div class="col-lg-6 col-md-12 text-center">
             <div class="service-box mt-5 mx-auto text-white">
+              <a href="#" style="text-decoration-color:#A9A9A9;">
                 <i class="fas fa-4x fa-film text-primary mb-3 sr-icon-1"></i>
                 <h3 class="mb-3">IMDB Movie Rating Prediction</h3>
                 <p class="text-muted mb-0 text-white">Created a multiple linear regression model to predict the movie rating in R.</p>
-                <a class="btn btn-light" href="./HorseRacing.html">Check it out!</a>
-                <a class="btn btn-light" href="https://github.com/JustinCharbonneau/R-Projects/blob/master/HorseRacingMd.Rmd">View the Code!</a>
+              </a>
             </div>
           </div>
           <div class="col-lg-6 col-md-12 text-center">
@@ -150,6 +131,14 @@
         </div>
       </div>
     </section>
+
+    <div w3-include-html="temp.html"></div> 
+
+    <script>
+    w3IncludeHTML();
+    </script>
+
+
 
     <!-- <section class="p-0" id="portfolio">
       <div class="container-fluid p-0">
