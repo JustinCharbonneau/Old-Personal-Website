@@ -1,0 +1,702 @@
+---
+title: "Stan Mechanics"
+author: "Justin Charbonneau"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    code_folding: hide
+    df_print: kable
+    toc: yes
+    toc_float: yes
+---
+
+# Acklowledgement
+
+The following is an integration in STAN from JAGS. The excercises were taken from the post by Dr. Peter Rabinovitch who is the lead data scientist at Ario and Adjuct professor at the University of Ottawa.
+[Here](https://rstudio-pubs-static.s3.amazonaws.com/86915_2df0e9b3040b431396811b6a3b9030ce.html)
+
+All following examples will use simulated data so you may reproduce the results.
+
+# Introduction
+
+You can interact with Stan in R using the RStan package. Alternatively, you can use Python using PyStan, but here I focus on using R.
+
+Stan models are created using different blocks of code.
+
+Required Blocks:
+
+* data: Used to pass in the external data to the model and initialize the variables.
+* parameters: Used to initialize the variables that the model is going to try and estimate.
+* model: Contains the likelihood and the priors if you enter some. (By default, priors are set to have Uniform distribution)
+
+Optional Blocks:
+
+* functions
+* transformed data
+* transformed parameters
+* generated quantities
+
+Tip 1: Comments are done using `//` 
+Tip 2: `Print()` statements may be used in the model block to print variables.
+
+```{r message = FALSE}
+library(dplyr); library(tidyr); library(rstan); library(ggplot2); library(rstan); library(broom);library(patchwork)
+```
+
+## Mean & Standard Deviation
+
+For this example, we have two parameters that we want to estimate (mu and sigma). To keep this simple, we will stick with a uniform prior. But, a standard deviation cannot go bellow 0, so we must include this in our model definition.
+
+Here we generate some data following the normal distribution.
+
+```{r}
+set.seed(2019)
+n_obs <- 10
+mu <- 10
+sigma <- 5
+x <- rnorm(n_obs, mu, sigma)
+```
+
+Next, we defined our model. We will only use the required blocks.
+
+```{r echo = TRUE}
+model_01 <- "
+data {
+  int<lower=1> N;   // # of observations; constrained to be greater than 0
+  vector[N] x;
+}
+parameters {
+  real mu;          // Parameter's distribution saught
+  real<lower=0> s;  // Parameter's distribution saught
+}
+model {
+  target += normal_lpdf(x | mu, s);  // Likelihood
+}
+"
+```
+
+Stan takes in data as a named list. Here we defined the number of observations as `N` and the array of numbers as `x`. Then, we will sample some data points from the posterior distribution of the parameters and plot them.
+
+To summarize your model, you may use `print()` or `plot()`. Here I used `plot()`.
+
+```{r results="hide", message=FALSE}
+data <- list(N = length(x),
+             x = x)
+
+fit <- sampling(stan_model(model_code=model_01), data = data, iter = 1000, chains = 2)
+
+plot(fit)
+```
+
+
+The intervals are prety wide with the reason being the sample was too small. It is credible though, because the intervals cover 10 for mu and 5 for sigma. Lets re-run this example using 50 numbers instead of just 10. Here’s the output:
+
+```{r}
+set.seed(2019)
+n_obs <- 50
+mu <- 10
+sigma <- 5
+x <- rnorm(n_obs, mu, sigma)
+
+data <- list(N = length(x),
+             x = x)
+
+fit <- sampling(stan_model(model_code=model_01), data = data, iter = 1000, chains = 2)
+
+plot(fit)
+```
+
+The intervals are narrower and closer to the expected values. Alternatively, we can add priors to our model. Because we only have 10 observations in this example, informative priors will help our model.
+
+```{r results="hide", message=FALSE, echo = TRUE}
+model_01 <- "
+data {
+  int<lower=1> N;   // Number of observations; constrained to be greater than 1
+  vector[N] x;
+}
+parameters {
+  real mu;
+  real<lower=0> s;  // Constrained to be greater than 0
+}
+model {
+  // Likelihood
+  target += normal_lpdf(x | mu, s);
+  
+  // Priors
+  target += normal_lpdf(mu | 12, 4);
+  target += normal_lpdf(s| 0, 10);
+}
+"
+
+fit <- sampling(stan_model(model_code=model_01), data = data, iter = 1000, chains = 2)
+
+plot(fit)
+```
+
+Slight improvement! From this, we could draw samples from the posterior distribution of the parameter by using the command `extract` and plot them.
+
+```{r message = FALSE}
+samps <- fit %>% extract() %>% as_tibble() %>% sample_n(400)
+
+p1 <- samps %>% ggplot(aes(mu))+geom_density(bw=.7)+labs(title="Density of mu")
+p2 <- samps %>% ggplot(aes(x=seq.int(1,400),y=mu))+geom_point(alpha=0.7)+labs(title="Samples of mu")
+
+p3 <- samps %>% ggplot(aes(s))+geom_density(bw=.7)+labs(title="Density of sigma")
+p4 <- samps %>% ggplot(aes(x=seq.int(1,400),y=s))+geom_point(alpha=0.7)+labs(title="Samples of sigma")
+
+(p1 + p2)/(p3 + p4)
+```
+
+
+## Mean & Standard Deviation Estimation with Outliers
+
+Adding outliers will add variance to the model. To account for this, we use the student t distribution because it allows for the variation that we have in the data. Using the gaussian distribution would lead to a bad fit.
+
+```{r}
+set.seed(2019)
+n <- 50
+mux <- 10
+s <- 3
+x <- rnorm(n, mux, s)
+x[23]<-50   # Adding outlier
+x[35]<-60   # Adding outlier
+x[45]<-55   # Adding outlier
+```
+
+Here we set the prior distribution for the other parameter nu to exponential from 0 to 29 because as the distribution approached 30 degrees of freedom, it converges to a normal distribution.
+
+```{r echo = TRUE}
+model_02 <- "
+data {
+  int<lower=1> N;   // Number of samples and stop if smaller than 1
+  vector[N] x;      // The actual data
+}
+parameters {
+  real mu;                  // Posterior distribution sought
+  real<lower=0> sigma;      // Posterior distribution sought
+  real<lower=0> nu;         // Posterior distribution sought
+}
+model {
+  target += student_t_lpdf(x | nu, mu, sigma);  // Likelihood
+  
+  target += normal_lpdf(mu | 10, 5);            // Prior
+  target += normal_lpdf(sigma | 0, 10);         // Prior
+  target += exponential_lpdf(nu | 1.0/29);      // Prior
+}
+"
+```
+
+```{r results="hide", message=FALSE}
+data_02 <- list(N = n,
+             x = x)
+
+fit_02 <- sampling(stan_model(model_code=model_02), data = data_02, iter = 2000, chains = 2, cores = 2)
+```
+
+Taking a quick look at the output ...
+
+```{r}
+print(fit_02)
+```
+
+
+```{r message = FALSE}
+samps_02 <- fit_02 %>% extract() %>% as_tibble() %>% sample_n(400)
+
+p1 <- samps_02 %>% ggplot(aes(mu))+geom_density(bw=.2)+labs(title="Density of mu")
+p2 <- samps_02 %>% ggplot(aes(x=seq.int(1,400),y=mu))+geom_point(alpha=0.7)+labs(title="Samples of mu")
+
+p3 <- samps_02 %>% ggplot(aes(sigma))+geom_density(bw=.2)+labs(title="Density of sigma")
+p4 <- samps_02 %>% ggplot(aes(x=seq.int(1,400),y=sigma))+geom_point(alpha=0.7)+labs(title="Samples of sigma")
+
+p5 <- samps_02 %>% ggplot(aes(nu))+geom_density(bw=.2)+labs(title="Density of nu")
+p6 <- samps_02 %>% ggplot(aes(x=seq.int(1,400),y=nu))+geom_point(alpha=0.7)+labs(title="Samples of sigma")
+
+(p1 + p2)/(p3 + p4)/(p5 + p6)
+```
+
+## Comparing Paired Values
+
+We can also compute the distribution of the differences of a paired sample.
+
+```{r}
+set.seed(2019)
+n <- 10
+mux <- 10
+muy <- 12
+s <- 5
+z <- rnorm(n, mux, s)
+y <- rnorm(n, muy, s)
+x <- z-y
+
+```
+
+```{r echo = TRUE}
+model_03 <- "
+data {
+  int<lower=1> N;           // number of observations
+  vector[N] x;              // actual data
+}
+parameters {
+  real mu;                  // parameter sought
+  real<lower=0> sigma;      // parameter sought
+}
+model {
+  target += normal_lpdf(x | mu, sigma);     // likelihood
+  
+  target += normal_lpdf(mu | 0, 10);        // Prior
+  target += uniform_lpdf(sigma | 0, 1000);  // Prior
+}
+"
+```
+
+```{r results="hide", message=FALSE}
+data_03 <- list(N = n,
+             x = x)
+
+fit_03 <- sampling(stan_model(model_code=model_03), data = data_03, chains = 2, cores = 2)
+```
+
+```{r}
+samps_03 <- fit_03 %>% extract() %>% as_tibble() %>% sample_n(400)
+
+p1 <- samps_03 %>% ggplot(aes(mu))+geom_density(bw=2)+labs(title="Density of mu")
+p2 <- samps_03 %>% ggplot(aes(x=seq.int(1,400),y=mu))+geom_point(alpha=0.7)+labs(title="Samples of mu")
+
+p3 <- samps_03 %>% ggplot(aes(sigma))+geom_density(bw=2)+labs(title="Density of sigma")
+p4 <- samps_03 %>% ggplot(aes(x=seq.int(1,400),y=sigma))+geom_point(alpha=0.7)+labs(title="Samples of sigma")
+
+(p1 + p2)/(p3 + p4)
+
+```
+
+
+## Non-Paired Comparisons
+
+Similar to the previous example, here we generate different sets of data points. Both different in lenght and not paired. Here we introduce a new block, the transformed parameters block.
+
+It is used to calculate new variables in our model, for which we will estimate a distribution for them.
+
+```{r}
+set.seed(2019)
+nx <- 100
+ny <- 50
+mux <- 10
+muy <- 12
+s <- 5
+x <- rnorm(nx, mux, s)
+y <- rnorm(ny, muy, s)
+```
+
+```{r echo = TRUE}
+model_04 <- "
+data {
+  int<lower=1> N_x;
+  int<lower=1> N_y;
+  vector[N_x] x;
+  vector[N_y] y;
+}
+parameters {
+  real mu_x;
+  real mu_y;
+  real<lower=0> sigma_x;
+  real<lower=0> sigma_y;
+}
+transformed parameters {
+  real sigma_diff = sigma_x - sigma_y;
+  real mu_diff = mu_x - mu_y;
+}
+model {
+  target += normal_lpdf(x | mu_x, sigma_x);  // Likelihood
+  target += normal_lpdf(y | mu_y, sigma_y);  // Likelihood
+
+  target += normal_lpdf(mu_x | 10, 6);       // Prior
+  target += normal_lpdf(mu_y | 10, 6);       // Prior
+  
+  target += uniform_lpdf(sigma_x | 0, 10);   // Prior
+  target += uniform_lpdf(sigma_y | 0, 10);   // Prior
+}
+"
+```
+
+```{r results="hide", message=FALSE}
+data_04 <- list(N_x = nx,
+             N_y = ny,
+             x = x,
+             y = y)
+
+fit_04 <- sampling(stan_model(model_code=model_04),data = data_04, iter = 1000, chains = 3, cores = 3)
+```
+
+```{r}
+samps_04 <- fit_04 %>% extract() %>% as_tibble() %>% sample_n(400)
+
+p1 <- samps_04 %>% ggplot(aes(mu_x))+geom_density(bw=.2)+labs(title="Density of mu_x")
+p2 <- samps_04 %>% ggplot(aes(x=seq.int(1,400),y=mu_x))+geom_point(alpha=0.7)+labs(title="Samples of mu_x")
+
+p3 <- samps_04 %>% ggplot(aes(mu_y))+geom_density(bw=.3)+labs(title="Density of mu_y")
+p4 <- samps_04 %>% ggplot(aes(x=seq.int(1,400),y=mu_y))+geom_point(alpha=0.7)+labs(title="Samples of mu_y")
+
+p5 <- samps_04 %>% ggplot(aes(sigma_x))+geom_density(bw=.3)+labs(title="Density of sigma_x")
+p6 <- samps_04 %>% ggplot(aes(x=seq.int(1,400),y=sigma_x))+geom_point(alpha=0.7)+labs(title="Samples of sigma_x")
+
+p7 <- samps_04 %>% ggplot(aes(sigma_y))+geom_density(bw=.3)+labs(title="Density of sigma_y")
+p8 <- samps_04 %>% ggplot(aes(x=seq.int(1,400),y=sigma_y))+geom_point(alpha=0.7)+labs(title="Samples of sigma_y")
+
+p9 <- samps_04 %>% ggplot(aes(sigma_diff))+geom_density(bw=.3)+labs(title="Density of sigma_diff")
+p10 <- samps_04 %>% ggplot(aes(x=seq.int(1,400),y=sigma_diff))+geom_point(alpha=0.7)+labs(title="Samples of sigma_diff")
+
+p11 <- samps_04 %>% ggplot(aes(mu_diff))+geom_density(bw=.3)+labs(title="Density of mu_diff")
+p12 <- samps_04 %>% ggplot(aes(x=seq.int(1,400),y=mu_diff))+geom_point(alpha=0.7)+labs(title="Samples of mu_diff")
+
+(p1 + p2)/(p3 + p4)/(p5 + p6)
+
+(p7 + p8)/(p9 + p10)/(p11 + p12)
+
+```
+
+## Bayesian Regression
+
+One way to model a bayesian regression is to provide the regression as the mean.
+
+```{r}
+set.seed(2019)
+n <- 100
+a <- 3
+b <- 0.5
+s <- 25
+x <- runif(n, 0, 100)
+y <- a * x + b + rnorm(n, 0, s)
+plot(x, y, pch=19)
+```
+
+Here, there are multiple ways you could model it. Two simple differences, is you can either not define mu, and replace it with the regression equation `target += normal_lpdf(y | a*x + b, sigma)` or you can define mu in the model block. Here you must pass it at the begining ofthe model for it to work. You cannot define model variables lower, which means if you provide a `print()` statement (because you are checking the values of your model) in front of those variables, it's not going to work. 
+
+```{r echo=TRUE}
+model_05 <- "
+data {
+  int<lower=1> N;       // Number of observations
+  vector[N] x;          // Single feature
+  vector[N] y;          // Output
+}
+parameters {
+  real<lower=0> sigma;  // standard deviation of y
+  real a;               // slope
+  real b;               // y intercept
+}
+model {
+  // print(N);          // <----- uncommenting print will throw an error
+  
+  vector[N] mu;         
+  mu = a * x + b;
+  
+  // print(N);          // <----- uncommenting print will work here but will print # of iterations
+  
+  target += normal_lpdf(sigma | 0, 10);   // Prior for the standard deviation of y
+  target += normal_lpdf(a | 1, 10);       // Prior for the slope
+  target += normal_lpdf(b | 0, 10);       // Prior for the intercept
+  
+  target += normal_lpdf(y | mu, sigma);   // Likelihood
+}
+"
+```
+
+```{r results="hide", message=FALSE}
+data_05 <- list(N = n,
+             x = x,
+             y = y)
+
+fit_05 <- sampling(stan_model(model_code=model_05),data=data_05, iter = 1000, chains = 2, cores =2)
+```
+
+```{r}
+samps_05 <- fit_05 %>% extract() %>% as_tibble() %>% sample_n(400)
+
+p1 <- samps_05 %>% ggplot(aes(sigma))+geom_density(bw=.4)+labs(title="Density of sigma")
+p2 <- samps_05 %>% ggplot(aes(x=seq.int(1,400),y=sigma))+geom_point(alpha=0.7)+labs(title="Samples of sigma")
+
+p3 <- samps_05 %>% ggplot(aes(a))+geom_density(bw=.1)+labs(title="Density of a")
+p4 <- samps_05 %>% ggplot(aes(x=seq.int(1,400),y=a))+geom_point(alpha=0.7)+labs(title="Samples of a")
+
+p5 <- samps_05 %>% ggplot(aes(b))+geom_density(bw=2)+labs(title="Density of b")
+p6 <- samps_05 %>% ggplot(aes(x=seq.int(1,400),y=b))+geom_point(alpha=0.7)+labs(title="Samples of b")
+
+(p1 + p2) / (p3 + p4) / (p5 + p6)
+
+```
+
+
+Now we can use the samples generated to plot the regression lines on the original data points. All of them have a slight different slope.
+
+```{r}
+a <- 3
+b <- 0.5
+pp <- data_05 %>% as_tibble() %>% ggplot(aes(x,y))+geom_point()+
+  geom_abline(aes(intercept = b, slope = a), data = samps_05, color = 'blue', alpha = .1)+
+  geom_abline(aes(intercept = b, slope = a), color = 'white', linetype = 2)
+
+pp
+```
+
+
+## Hierarchical Regression
+
+Here we will generate five groups of data which will have 5 different slopes and 5 different intercepts.
+
+```{r}
+set.seed(2019)
+n <- 100
+G <- 5
+
+a <- rnorm(G,7,4)   # 5 different slopes 
+b <- rnorm(G, 30, 30)  # 5 intercept intercepts
+s <- 2
+x1 <- runif(n, 0, 100)# runif(n, 0, 100)  # -> why not just seq.int(1,100)
+y1 <- a[1] * x1 + b[1]    # y1 = 6.77 * x -1.6 + E    -> 100 observations
+f1<-rep(1,n)
+
+x<-x1
+y<-y1
+f<-f1
+for (j in 2:G){
+  x1 <- runif(n, 0, 100)#runif(n, 0, 100)  # -> why not just seq.int(1,100)
+  y1 <- a[j] * x1 + b[j] + rnorm(n, 0, s)
+  f1<-rep(j,n)
+  x<-c(x,x1)
+  y<-c(y,y1)
+  f<-c(f,f1)
+}
+N <- length(x)
+dataList <- list( x = x, y = y, f=f, N = N, G = G)
+
+pp <- tibble(x=x,y=y,c=f) %>% mutate(c = factor(c)) %>% ggplot(aes(x=x,y=y,color=c))+geom_point()
+pp
+```
+
+Here all five slopes and five intercepts will come from a parent distribution.
+
+
+A note on data types. Vectors in STAN are only used for real values. Thus, if you want to pass in integers because you will be using those as indexes, use int name_array[size_array] instead of vector[size_array] name_array.
+
+```{r echo = TRUE}
+model_06 <- "
+data {
+  int<lower=1> N;  // Number of observations
+  int<lower=1> G;  // Number of groups
+  int f[N];     // Group id
+  vector[N] x;
+  vector[N] y;
+}
+parameters {
+  vector[G] a;  // 5 slopes
+  vector[G] b;  // 5 intercepts
+  
+  real mua;     // parent mu for slopes
+  real mub;     // parent mu for intercepts
+  
+  real<lower=0> sigma;
+  real<lower=0> sigmac;
+}
+model {
+  vector[N] mu;  // We aren't having our model estimate the distribution of this variable, so we don't define it in params
+  
+  for (j in 1:G){
+    target += normal_lpdf(a[j] | mua, sigmac);
+    target += normal_lpdf(b[j] | mub, sigmac);
+  }
+  
+  for (i in 1:N){
+    mu[i] = a[f[i]]*x[i]+b[f[i]];  // use slope and intercept value using the reference f[i] {1,2,3,4,5}
+    target += normal_lpdf(y[i] | mu[i], sigma);
+  }
+  
+  target += normal_lpdf(mua | 0, 10);
+  target += normal_lpdf(mub | 0, 10);                    
+  target += uniform_lpdf(sigma | 0, 1000);
+  target += uniform_lpdf(sigmac | 0, 1000);
+}
+"
+```
+
+
+```{r results="hide", message=FALSE}
+data_06 <- list(x = x, y = y, f=f, N = N, G = G)
+fit_06 <- sampling(stan_model(model_code=model_06),data=data_06, iter = 1000, chains = 2, cores =2)
+
+```
+
+```{r}
+print(fit_06)
+```
+
+
+
+## Three level hiarchical model
+
+Here you could see it as having a country with a distribution. Within that country, having provinces drawing a distribution from it's country. Then cities within that provinces distribution.
+
+This is usefull, because a business that isn't part of your province, could simply draw it's data from the nationals distribution.
+
+```{r}
+set.seed(2020)
+canada_mu <- 50
+canada_mu_sigma <- 6
+
+canada_sd <- 15
+canada_sd_sigma <- 3
+
+sigma <- 3
+
+ontario_mu <- rnorm(1,canada_mu,canada_mu_sigma)
+ontario_mu_sigma <- 7
+ontario_sd <- rnorm(1,canada_sd,canada_sd_sigma)
+ontario_sd_sigma <- 1
+
+quebec_mu <- rnorm(1,canada_mu,canada_mu_sigma)
+quebec_mu_sigma <- 2
+quebec_sd <- rnorm(1,canada_sd,canada_sd_sigma)
+quebec_sd_sigma <- 4
+  
+toronto_mu <- rnorm(1,ontario_mu,ontario_mu_sigma)
+toronto_sd <- rnorm(1,ontario_sd,ontario_sd_sigma)
+  
+montreal_mu <- rnorm(1,quebec_mu,quebec_mu_sigma)
+montreal_sd <- rnorm(1,quebec_sd,quebec_sd_sigma)
+
+business_1_mu <- rnorm(1,montreal_mu,2)
+business_1_sd <- rnorm(1,montreal_sd,2)
+
+business_2_mu <- rnorm(1,toronto_mu,2)
+business_2_sd <- rnorm(1,toronto_sd,2)
+
+# business 1
+b1 <- c()
+for (i in 1:10){
+  a <- rnorm(1,business_1_mu,business_1_sd)
+  value <- a * i + 300
+  print(value)
+  b1[i] <- value
+}
+
+# business 2
+b2 <- c()
+for (i in 1:10){
+  a <- rnorm(1,business_1_mu,business_1_sd)
+  value <- a * i + 20
+  print(a)
+  b2[i] <- value
+}
+
+b_ <- tibble(time = rep(c(1,2,3,4,5,6,7,8,9,10),2),
+             vals = c(b1, b2),
+             business_id = c(rep(1,10),rep(2,10)),
+             prov_id = c(rep(1,10),rep(2,10)),
+             city_id = c(rep(1,10),rep(2,10)))
+
+ggplot(b_,aes(x=time,y=vals,color=business_id))+geom_point()
+```
+
+```{r}
+model_recent <- "
+data {
+  // important for looping
+  int<lower=0> Nb;  // # of observations total (individual businesses)
+  int<lower=0> Nc;  // # of groups (cities) 2
+  int<lower=0> Np;  // # of groups (provinces)
+
+  // int<lower=1> business_id[Nb];   // not sure about this one ?
+
+  int<lower=1> city_id[Nb];
+  int<lower=1> province_id[Nb];     // City province lookup
+
+  int<lower=1> city_province_lkp[Nc];
+
+  real y[Nb];
+  real x[Nb];
+}
+parameters {
+  real<lower=0> sigma;
+  
+  real canada_mu;           // Canada
+  real<lower=0> canada_sigma;        // Canada
+  
+  // Varying intercepts and slopes
+  real beta_0cp[Nc];
+  real a_0cp[Nc];
+  
+  // 
+  real prov_mu_beta[Np];
+  real<lower=0> prov_s_beta[Np];
+  
+  real prov_mu_slope[Np];
+  real<lower=0> prov_s_slope[Np];
+  
+}
+transformed parameters {
+
+  //real mu[Nb];
+
+  //for (b in 1:Nb){
+  //  mu[b] = a_0cp[city_id[b]] * x[b] + beta_0cp[city_id[b]];  // mu of a business will be slope from city + x position + intercept from city
+  //}
+
+  
+}
+model {
+  real mu[Nb];
+  
+  // Level-3 (level-3 random intercepts)
+  for (p in 1:Np){
+  
+    target += normal_lpdf(prov_mu_beta[p] | canada_mu, canada_sigma);
+    target += normal_lpdf(prov_s_beta[p] | canada_mu, canada_sigma);
+
+    target += normal_lpdf(prov_mu_slope[p] | canada_mu, canada_sigma);
+    target += normal_lpdf(prov_s_slope[p] | canada_mu, canada_sigma);
+
+  }
+  
+  // Level-2 (level-2 random intercepts)
+  for (c in 1:Nc){
+    target += normal_lpdf(beta_0cp[c] | prov_mu_beta[city_province_lkp[c]], prov_s_beta[city_province_lkp[c]]);
+    target += normal_lpdf(a_0cp[c] | prov_mu_slope[city_province_lkp[c]], prov_s_slope[city_province_lkp[c]]);
+  }
+
+  for (b in 1:Nb) {
+    mu[b] = a_0cp[city_id[b]] * x[b] + beta_0cp[city_id[b]];  // mu of a business will be slope from city + x position + intercept from city
+
+    target += normal_lpdf(y[b] | mu[b], sigma);
+  }
+  
+}
+"
+```
+
+```{r}
+data <- with(b_,
+             list(x    = time,
+                  y    = vals,
+                  Nb   = 20,                  # Number of observations
+                  Nc   = 2,                   # Number of cities
+                  Np   = 2,                   # Number of provinces
+                  business_id = business_id,  # business reference (vector)
+                  city_id = city_id,          # city reference (vector)
+                  province_id = prov_id,       # province reference (vector)
+                  city_province_lkp = c(1,2)
+                  ))
+```
+
+```{r results="hide", message=FALSE}
+fit <- sampling(stan_model(model_code = model_recent),data=data,iter=2000,chains=4,cores=2)
+```
+
+```{r}
+plot(fit)
+```
+
+
+As I develop better knowledge on Bayesian Statistics and Stan, I will add the resources here.
+
+
+
+
