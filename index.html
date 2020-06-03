@@ -17,16 +17,23 @@
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
-
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
     <!-- Plugin CSS -->
     <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/creative.min.css" rel="stylesheet">
+    <link href="css/timeline.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
 
     <!-- Font Awesome Icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
+    <link rel="shortcut icon" href="icon.ico" type="image/x-icon">
+    <link rel="icon" href="icon.ico" type="image/x-icon">
 
   </head>
 
@@ -35,7 +42,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Justin Charbonneau</a>
+        <!-- <a class="navbar-brand js-scroll-trigger" href="#page-top">Justin Charbonneau</a> -->
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -63,17 +70,17 @@
         <div class="row">
           <div class="col-lg-10 mx-auto">
             <h1 style="font-weight:300;">
-              <strong>Justin Charbonneau</strong>
+                <span style="color:#fff;font-weight: bold;"><strong>JUSTIN CHARBONNEAU</strong></span>
             </h1>
             <h5 style="font-weight:100;">
-              <strong>University of Ottawa Masters student</strong><br>
-              <span style="color:#090538"><strong>Data Science | Machine Learning | Coffee</strong></span>
+                <span style="color:#ffffff;font-size:xx-large;"><strong>Data Scientist</strong><br></span>
+              <!-- <span style="color:#090538"><strong>Data Science | Machine Learning | Coffee</strong></span> -->
             </h5>
           </div>
         </div>
         <div class="row" style="margin-top:10%">
           <div class="col-lg-8 mx-auto">
-            <a class="btn btn-light btn-xl js-scroll-trigger" href="#about"><!--<i class="fas fa-rocket fa-2x" style="transform: rotate(135deg);"></i>-->About Me!</a>
+            <a class="btn btn-light btn-xl js-scroll-trigger" style="background-color:transparent;border-color: #fff;" href="#about"><!--<i class="fas fa-rocket fa-2x" style="transform: rotate(135deg);"></i>--><span style="color: #fff;"><i class="fas fa-chevron-down fa-5x"></i></span></a>
           </div>
         </div>
       </div>
@@ -82,40 +89,169 @@
     <section class="bg-primary" id="about">
       <div class="container">
         <div class="row">
-          <div class="col-lg-2 col-md-1 mx-auto">
-            <img class="img-thumbnail" src="img/profilePic.jpg" alt="Profile Picture" style="margin-top:40px;">
+          <div class="col-lg-3 col-md-1 mx-auto text-center">
+              <h2 class="section-heading" style="font-weight: light;">About Me</h2>
+              <hr class="my-4">
+          </div>
+          <div class="col-lg-1 col-md-1 mx-auto text-center">
           </div>
           <div class="col-lg-8 col-md-10 mx-auto">
-            <h2 class="section-heading text-white">Bio</h2>
-            <br>
-            <p class="text-faded mb-4">Data Scientist @ CRIM (Computer Research Institute of Montréal)</p>
-            <br>
-            <p class="text-faded mb-4">I have just started my carreer as a Data Scientist and I love it. Prior I had experience as
-              a teacher assistant for Introduction to Artificial Intelligence and research assistant at the KDD lab in Ottawa. I also 
-              completed two Coop terms at Ario Platform working on the data science team.
-              <br>
-              <br>
-              Most recently, I have been learning more about deep learning and following the fast ai course. I think the fastai library
-              is a great tool to know, and is based on most current research.I also try to work on pet data science projects 
-              which you can see bellow.<br>
-            <br>
-            Timeline:<br>
-            <br>
-            <span style="color:#212529">2019 December - Now </span> Data Scientist at CRIM <br>
-            <span style="color:#212529">2019 September - December </span> Research Assistant at the University of Ottawa <a href="http://web5.uottawa.ca/www5/braahemi/KDD-lab.htm">(KDD lab)</a><br>
-            <span style="color:#212529">2019 September - December </span> Teacher Assitant for Introduction to Artificial Intelligence<br>
-            <span style="color:#212529">2019 January - August </span> Data Scientist (Coop) at Ario Platform<br>
-            <span style="color:#212529">2018 - 2019 </span> Masters of Electronic Business Technologies<br>
-            <span style="color:#212529">2014 - 2017 </span> Bachelor of Commerce - Management Information Systems and Analytics<br>
+
+            <p class="text-faded mb-4"><span style="color:#212529">I joined the Computer Research Institute of Montreal in December 2019 following 
+              the completion of my masters in Electronic Business Technologies. I also hold a bachelor in 
+              Management Information Systems and Analytics. I have been involved in several projects, 
+              including emotion detection and the development of a content-based recommender system. 
+                <br><br>
+                My main interests are related to data science and the applications of new algorithms 
+                in machine learning on time series and natural language processing tasks. 
+                Most recently, I have been concentrating on deep learning approaches and following 
+                the FastAI MOOC. </span></p>
           </div>
         </div>
-        <div class="row">
-          <div class="col-lg-8 mx-auto text-center">
-            <a class="btn btn-light btn-xl js-scroll-trigger" href="#projects">Check out My Projects!</a>
+        <br><br><br>
+      <!-- </div>
+    </section>
+
+<section class="bg-primary">
+  <div class="container"> -->
+      <div class="row">
+          <div class="col-lg-3 col-md-1 mx-auto text-center">
+              <h2 class="section-heading" style="font-weight: light;">Experience</h2>
+              <hr class="my-4">
           </div>
+          <div class="col-lg-1 col-md-1 mx-auto text-center">
+            </div>
+          <div class="col-lg-8 col-md-10 mx-auto"> 
+        <div class="container">
+            <div class="row">
+              <div class="timeline-centered">
+              
+            <article class="timeline-entry">
+              <div class="timeline-entry-inner">
+                <time class="timeline-time" datetime="2019-12-10T03:45"><span>Today</span> <span>Dec. 2019</span></time>
+                <div class="timeline-icon bg-secondary">
+                  <i class="entypo-feather"></i>
+                </div>
+              <div class="timeline-label">
+                  <h2><a href="#">Data Scientist</a> <span>Computer Research Institute of Montréal </span></h2>
+                  <p>Prototyping machine learning solutions for SME's and startups and offering consulting services to help local businesses.</p>
+                </div>
+              </div>
+            </article>
+            
+            
+            <article class="timeline-entry">
+              
+              <div class="timeline-entry-inner">
+                <time class="timeline-time" datetime="2014-01-10T03:45"><span>Dec. 2019</span> <span>Sept. 2019</span></time>
+                
+                <div class="timeline-icon bg-secondary">
+                  <i class="entypo-suitcase"></i>
+                </div>
+                
+                <div class="timeline-label">
+                  <h2><a href="#">Research Assistant (KDD lab)</a> <span>University of Ottawa</span></h2>
+                  <p>Researched and applied deep learning techniques (Word Embeddings, Convolutional Neural Networks, Recurrent Neural Networks) using Keras.</p>
+                </div>
+              </div>
+              
+            </article>
+
+            <article class="timeline-entry">
+              <div class="timeline-entry-inner">
+                <time class="timeline-time" datetime="2014-01-10T03:45"><span>Dec. 2019</span> <span>Sept. 2019</span></time>
+                
+                <div class="timeline-icon bg-secondary">
+                  <i class="entypo-suitcase"></i>
+                </div>
+                
+                <div class="timeline-label">
+                  <h2><a href="#">Teacher Assistant (Introduction to AI)</a> <span>University of Ottawa</span></h2>
+                  <p>Created Python Jupyter Notebook tutorials utilizing libraries (Scikit-Learn, NetworkX, Matplotlib) for fourth year students. 
+                    Provided help to students on topics such as searching algorithms (Best-First, A*, Greedy) and machine learning algorithms.</p>
+                </div>
+              </div>
+            </article>   
+
+            <article class="timeline-entry">
+              <div class="timeline-entry-inner">
+                <time class="timeline-time" datetime="2019-12-10T03:45"><span>Aug. 2019</span> <span>Jan. 2019</span></time>
+                
+                <div class="timeline-icon bg-secondary">
+                  <i class="entypo-feather"></i>
+                </div>
+                
+                <div class="timeline-label">
+                  <h2><a href="#">Data Scientist Coop</a> <span>ARIO Platform</span></h2>
+                  <p>Created an R package for collecting Google Trends data and aggregating results across time and location. Developed a proof of concept image processing and computer vision pipeline.</p>
+                </div>
+              </div>
+            </article>
+            
+            <article class="timeline-entry">
+              <div class="timeline-entry-inner">
+                <time class="timeline-time" datetime="2014-01-10T03:45"><span>Jan. 2018</span> <span>Dec. 2018</span></time>
+                
+                <div class="timeline-icon bg-secondary">
+                  <i class="entypo-suitcase"></i>
+                </div>
+                
+                <div class="timeline-label">
+                  <h2><a href="#">Programmer</a> <span>Department of Fisheries and Oceans Canada</span></h2>
+                  <p>Improved the accuracy of the information stored in the database by developing a PHP web application that identified discrepancies and allowed
+                      users to validate the information and track the validation progress</p>
+                </div>
+              </div>
+            </article>  
+            
+            <article class="timeline-entry begin">
+            
+              <div class="timeline-entry-inner">
+                
+              </div>
+              
+            </article>
+            
+          </div>
+            </div>
         </div>
       </div>
-    </section>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-1 mx-auto text-center">
+            <h2 class="section-heading" style="font-weight: light;">Skills</h2>
+            <hr class="my-4">
+        </div>
+    </div>  
+    <style>
+      #skills li {
+      display: inline-block;
+      margin: 7px;
+      padding: 5px 10px;
+      color: #ffffff;
+      background: #808081;
+      list-style: none;
+      cursor: default;
+      font-size: 1.2em;
+      border-radius: 25px;
+      }
+    </style>
+    <div class="row text-center" id="skills">
+      <div class="col-lg-8 col-md-6 mx-auto text-center">
+        <ul>
+          <li>Python</li>
+          <li>R</li>
+          <li>PyTorch</li>
+          <li>Exploratory Data Analysis</li>
+          <li>Machine Learning</li>
+          <li>Deep Learning</li>
+          <li>Natural Language Processing</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
 
     <section id="projects" class="bg-dark text-white">
       <div class="container">
@@ -125,7 +261,7 @@
 
             <!-- <h2 class="section-heading text-white">Some things I've worked on ...</h2> -->
             <!-- <p class="text-faded mb-4">If you're interested in working on a project, let's talk!<br> -->
-            - R & Python -</p>
+            <!-- - R & Python -</p> -->
 
             <hr class="my-4 btn-light">
           </div>
@@ -332,22 +468,50 @@
       </div>
     </section> -->
 
-    <!-- <section class="bg-dark text-white">
-      <div class="container text-center">
-        <h2 class="mb-4">Free Download at Start Bootstrap!</h2>
-        <a class="btn btn-light btn-xl sr-button" href="http://startbootstrap.com/template-overviews/creative/">Download Now!</a>
-      </div>
-    </section> -->
+    <style>
+    ::placeholder {
+      color: white!important;
+    }
+
+    .button2:hover {
+      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+    }
+    </style>
+
+    <section class="bg-primary" text-white">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                  <h1 class="section-heading">Let's Get In Touch!</h1>
+                  <hr class="my-4">
+                  <p class="mb-5" style="font-size: large;">If you are passionate about data science and would like to work on a project with me, send me an email and I will get back to you!</p>
+                </div>
+              </div>
+            <div class="row">
+              <div class="col-lg-6 mx-auto text-center">
+                <form name="simple-contact-form" accept-charset="utf-8" action="https://formspree.io/mqkyqpwq" method="post">
+                    <!-- <label for="email-address">Your Email</label> -->
+                    <input type="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Email'" class="form-control mb-2" style="border:none;background:#303641;color:#fff" name="_replyto" id="email-address" placeholder="Your Email" required="">
+                    <!-- <label for="message">Message</label> -->
+                    <textarea rows="5" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Message'"  class="form-control mb-2" style="resize:none;border:none;background-color:#303641;color:#fff" name="message" id="message" placeholder="Your Message" required=""></textarea>
+                    <input type="hidden" name="_subject" id="email-subject" value="Contact Form Submission">
+                  <input type="submit" class="form-control mb-2 button2" style="border:none;background-color:#fffbfb;font-size: large;color:#5b5c5d ;font-weight: bold;" value="Send">
+                </form>
+              </div>
+            </div>
+        </div>
+      </section>
+
 
     <section id="contact">
       <div class="container">
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-lg-8 mx-auto text-center">
             <h2 class="section-heading">Let's Get In Touch!</h2>
             <hr class="my-4">
             <p class="mb-5">If you are passionate about data science and would like to work on a project with me, send me an email and I will get back to you!</p>
           </div>
-        </div>
+        </div> -->
         <div class="row">
           <div class="col-lg-4 ml-auto text-center">
             <i class="fab fa-github fa-3x mb-3 sr-contact-1"></i>
@@ -364,14 +528,14 @@
           <div class="col-lg-4 mr-auto text-center">
             <i class="fas fa-envelope fa-3x mb-3 sr-contact-2"></i>
             <p>
-              <a href="mailto:jchar217@uottawa.ca">jchar217@uottawa.ca</a>
+              <a href="mailto:justin.m.charbonneau@gmail.com">justin.m.charbonneau@gmail.com</a>
             </p>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-12 text-center">
             <br>
-            <p class="text-muted" style="text-align:center !important;">Copyright &copy; Justin Charbonneau 2019</p>
+            <p class="text-muted" style="text-align:center !important;">Copyright &copy; Justin Charbonneau 2020</p>
           </div>
         </div>
       </div>
